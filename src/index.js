@@ -27,10 +27,8 @@ function PokedexEntries({ pokedexEntries }) {
   console.log('pokedexEntries', pokedexEntries);
 
   const pokedexEntriesJsx = Object.keys(pokedexEntries).map((key) => (
-    <p>
-      { key }
-      {': '}
-      { pokedexEntries[key].en }
+    <p key={key}>
+      {`${key}: ${pokedexEntries[key].en}`}
     </p>
   ));
 
@@ -39,13 +37,13 @@ function PokedexEntries({ pokedexEntries }) {
 
 // component for a pokemon types
 function PokemonTypes({ types }) {
-  const typesEl = types.map((type) => {
+  const typesEl = types.map((type, index) => {
     const lowerCaseType = type.toLowerCase();
 
     return (
-      <span>
+      <span key={`${lowerCaseType}_${index}`}>
         <div className={`icon ${lowerCaseType}`}>
-          <img src={`/icons/${lowerCaseType}.svg`} />
+          <img src={`/icons/${lowerCaseType}.svg`} alt={lowerCaseType} />
         </div>
       </span>
     );
@@ -57,9 +55,8 @@ function PokemonTypes({ types }) {
 // component for a pokemon
 function Pokemon({ pokemonData }) {
   const myEL = (
-    <li key={pokemonData.national_id}>
-      {pokemonData.names.en}
-      {' types: '}
+    <li>
+      {`${pokemonData.names.en} types: `}
       <PokemonTypes types={pokemonData.types} />
       <div>
         <h6>entries</h6>
@@ -72,7 +69,8 @@ function Pokemon({ pokemonData }) {
 }
 
 // array of jsx list elements that contain pokemon names in english
-const pokemonsJsx = pokedex.map((pokemonData) => <Pokemon pokemonData={pokemonData} />);
+// eslint-disable-next-line max-len
+const pokemonsJsx = pokedex.map((pokemonData) => <Pokemon key={pokemonData.names.en} pokemonData={pokemonData} />);
 
 const pokemonsContainer = (
   <div>
@@ -87,5 +85,4 @@ const rootElement = document.createElement('div');
 document.body.appendChild(rootElement);
 
 // Render the myEl JSX element into the root element with React.
-// render(<Pokemon />, rootElement);
 render(pokemonsContainer, rootElement);
