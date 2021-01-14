@@ -20,56 +20,72 @@ for (const pokemonName in pokemon) {
   }
 }
 
-console.log(pokedex);
+console.log('pokedex', pokedex);
 
+// component for pokedex entries of a pokemon
 function PokedexEntries({ pokedexEntries }) {
   console.log('pokedexEntries', pokedexEntries);
-  const pokedexEntriesJsx = Object.keys(pokedexEntries).map((key) => {
-    console.log('pokedexEntries[key].en', pokedexEntries[key].en);
+
+  const pokedexEntriesJsx = Object.keys(pokedexEntries).map((key) => (
+    <p>
+      { key }
+      {': '}
+      { pokedexEntries[key].en }
+    </p>
+  ));
+
+  return pokedexEntriesJsx;
+}
+
+// component for a pokemon types
+function PokemonTypes({ types }) {
+  const typesEl = types.map((type) => {
+    const lowerCaseType = type.toLowerCase();
 
     return (
-      <li key={key}>
-        <p>
-          { key }
-          :
-          { pokedexEntries[key].en }
-        </p>
-      </li>
+      <span>
+        <div className={`icon ${lowerCaseType}`}>
+          <img src={`/icons/${lowerCaseType}.svg`} />
+        </div>
+      </span>
     );
   });
 
-  console.log('Object.keys(pokedexEntries)', Object.keys(pokedexEntries));
-  console.log('pokedexEntriesJsx', pokedexEntriesJsx);
-
-  return (
-    <ul>
-      {pokedexEntriesJsx}
-    </ul>
-  );
+  return typesEl;
 }
 
-const pokemonList = pokedex.map((onePokemon) => (
-  <li>
-    <p>{onePokemon.names.en}</p>
-    <PokedexEntries pokedexEntries={onePokemon.pokedex_entries} />
-  </li>
-));
-
-function Pokemon() {
+// component for a pokemon
+function Pokemon({ pokemonData }) {
   const myEL = (
-    <div>
-      <ul>
-        {pokemonList}
-      </ul>
-    </div>
+    <li key={pokemonData.national_id}>
+      {pokemonData.names.en}
+      {' types: '}
+      <PokemonTypes types={pokemonData.types} />
+      <div>
+        <h6>entries</h6>
+        <PokedexEntries pokedexEntries={pokemonData.pokedex_entries} />
+      </div>
+    </li>
   );
 
   return myEL;
 }
+
+// array of jsx list elements that contain pokemon names in english
+const pokemonsJsx = pokedex.map((pokemonData) => <Pokemon pokemonData={pokemonData} />);
+
+const pokemonsContainer = (
+  <div>
+    <ul>
+      {pokemonsJsx}
+    </ul>
+  </div>
+);
 
 // Create root element to render other elements into, add root element to DOM.
 const rootElement = document.createElement('div');
 document.body.appendChild(rootElement);
 
 // Render the myEl JSX element into the root element with React.
-render(<Pokemon />, rootElement);
+// render(<Pokemon />, rootElement);
+render(pokemonsContainer, rootElement);
