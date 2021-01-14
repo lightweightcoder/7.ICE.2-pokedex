@@ -35,5 +35,7 @@ module.exports = {
     'no-console': 'off',
     // Allow function param reassign for array or object elements or properties
     'no-param-reassign': ['error', { props: false }],
+    // allow jsx syntax in non .jsx files
+    'react/jsx-filename-extension': [0],
   },
 };
